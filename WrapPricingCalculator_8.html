@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wrap Pricing Calculator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:#1a1a1a;background:#f2f2f0;min-height:100vh;padding:16px}
+.calc{max-width:820px;margin:0 auto}
+h1{font-size:21px;font-weight:700;margin-bottom:2px}
+.subtitle{font-size:12px;color:#888;margin-bottom:20px}
+.section{margin-bottom:14px;padding:16px 18px;background:#fff;border:1px solid #e8e8e8;border-radius:10px}
+.stitle{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:12px}
+.vblock{padding:12px;background:#f8f8f7;border-radius:8px;margin-bottom:10px;border:1px solid #ebebeb}
+.vblock:last-child{margin-bottom:0}
+.vtitle{font-size:11px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.f{display:flex;flex-direction:column;gap:3px}
+.f label{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+select,input[type=text]{width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:7px;font-size:13px;background:#fff;color:#1a1a1a;outline:none}
+select:focus,input:focus{border-color:#378add}
+.sw{position:relative}
+.rl{position:absolute;top:calc(100% + 3px);left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:8px;max-height:220px;overflow-y:auto;z-index:200;display:none;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.ri{padding:8px 11px;cursor:pointer;font-size:13px;border-bottom:1px solid #f5f5f5}
+.ri:last-child{border-bottom:none}
+.ri:hover{background:#f0f7ff}
+.ri .mk{font-size:11px;color:#aaa;margin-top:1px}
+.badge{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#edf4fb;border-radius:7px;margin-top:6px;font-size:12px}
+.badge strong{color:#185FA5;font-size:13px}
+.bsf{color:#888}
+.clr{margin-left:auto;color:#aaa;cursor:pointer;font-size:11px}
+.clr:hover{color:#e24b4a}
+.tg{display:flex;gap:5px}
+.t{flex:1;padding:7px 4px;border:1px solid #ddd;border-radius:7px;font-size:12px;cursor:pointer;text-align:center;background:#fff;color:#777;user-select:none;font-weight:600}
+.t:hover{background:#f5f5f5}
+.t.on{border-color:#185FA5;background:#e8f3fb;color:#185FA5}
+.ar{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f5f5f5}
+.ar:last-child{border-bottom:none}
+.ar input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:#185FA5;flex-shrink:0}
+.ar label{flex:1;font-size:13px;cursor:pointer}
+.at{font-size:11px;color:#bbb;font-weight:600}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.mt{padding:12px 14px;background:#f7f7f6;border-radius:8px}
+.ml{font-size:10px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.mv{font-size:21px;font-weight:700;color:#1a1a1a}
+.mv.g{color:#0a6649}
+.mv.r{color:#a32d2d}
+.li{width:100%;font-size:13px;border-collapse:collapse;margin-bottom:14px}
+.li tr{border-bottom:1px solid #f2f2f2}
+.li tr:last-child{border-bottom:none}
+.li td{padding:6px 4px;color:#555}
+.li td:last-child{text-align:right;font-weight:600;color:#1a1a1a}
+.li .tot td{font-weight:700;font-size:15px;padding-top:11px;color:#1a1a1a;border-top:2px solid #e5e5e5}
+.sb{margin-top:12px;padding:13px 15px;background:#e6f0fb;border:1px solid #b5d4f4;border-radius:8px}
+.sl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#185FA5;margin-bottom:4px}
+.sr{font-size:22px;font-weight:700;color:#0c447c;margin-bottom:3px}
+.sn{font-size:11px;color:#378add}
+.qn{margin-top:10px;font-size:11px;color:#aaa;background:#f8f8f7;padding:7px 10px;border-radius:6px;line-height:1.6}
+.bc{width:100%;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;background:#1a1a1a;color:#fff;margin-top:12px}
+.bc:hover{background:#333}
+.bc.ok{background:#0a6649}
+.em{text-align:center;padding:2rem;color:#bbb;font-size:13px}
+@media(max-width:580px){.g2,.g3,.g4{grid-template-columns:1fr}.rg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="calc">
+<h1>Wrap Pricing Calculator</h1>
+<p class="subtitle">325 vehicles · all wrap types · in-house &amp; subcontract</p>
+
+<div class="section">
+<div class="stitle">Job Info</div>
+<div class="g2">
+<div class="f"><label>Company Name</label><input type="text" id="co" placeholder="ABC Plumbing Co."></div>
+<div class="f"><label>Contact Name</label><input type="text" id="ct" placeholder="John Smith"></div>
+</div>
+</div>
+
+<div class="section">
+<div class="stitle">Vehicles</div>
+
+<div class="vblock">
+<div class="vtitle">Vehicle 1</div>
+<div class="f" style="margin-bottom:8px">
+<label>Search make or model</label>
+<div class="sw"><input type="text" id="vs1" placeholder="e.g. Ford F-150, Hyundai Tucson, Transit..." autocomplete="off"><div class="rl" id="rl1"></div></div>
+<div id="vb1" class="badge" style="display:none"><strong id="vn1"></strong><span class="bsf" id="vf1"></span><span class="clr" onclick="clrV(1)">&#x2715; clear</span></div>
+</div>
+<div class="g4">
+<div class="f"><label>Wrap Type</label><select id="wt1" onchange="calc()"><option value="">&#8212; Select &#8212;</option><option value="full">Full Wrap</option><option value="3/4">3/4 Wrap</option><option value="half">Half Wrap</option><option value="quarter">Quarter Wrap</option><option value="ll">Lettering &amp; Logo</option></select></div>
+<div class="f"><label>Material</label><select id="m1" onchange="calc()"><option value="Cast-3M-IJ180CV3">Cast-3M ($1.45)</option><option value="Cast-Brightline (Economy)">Brightline ($1.45)</option><option value="Reflective-3M">Refl-3M ($0.86)</option><option value="Reflective -Briteline (Economy)">Refl-Brit ($0.83)</option><option value="Perf-Briteline 70/30">Perf-Brit ($5.56)</option><option value="Perf-3M 50/50">Perf-3M ($4.77)</option></select></div>
+<div class="f"><label>Laminate</label><select id="l1" onchange="calc()"><option value="None">None</option><option value="Cast-3M 8518-Gloss" selected>3M Gloss ($0.96)</option><option value="Cast-3M 8520 Matte">3M Matte ($1.15)</option><option value="Cast-Brightline-Gloss">BL Gloss ($1.15)</option><option value="Cast-Brightline-Matte">BL Matte ($0.66)</option><option value="Calendered-3M-8508">Cal 3M ($0.66)</option></select></div>
+<div class="f"><label>Install</label><div class="tg"><div class="t on" id="i1ih" onclick="setI(1,'ih')">In-House</div><div class="t" id="i1sub" onclick="setI(1,'sub')">Sub</div></div></div>
+</div>
+</div>
+
+<div class="vblock">
+<div class="vtitle">Vehicle 2 <span style="font-weight:400;color:#bbb">(optional)</span></div>
+<div class="f" style="margin-bottom:8px">
+<label>Search make or model</label>
+<div class="sw"><input type="text" id="vs2" placeholder="e.g. Chevy Express, Ram ProMaster, box truck..." autocomplete="off"><div class="rl" id="rl2"></div></div>
+<div id="vb2" class="badge" style="display:none"><strong id="vn2"></strong><span class="bsf" id="vf2"></span><span class="clr" onclick="clrV(2)">&#x2715; clear</span></div>
+</div>
+<div class="g4">
+<div class="f"><label>Wrap Type</label><select id="wt2" onchange="calc()"><option value="">&#8212; None &#8212;</option><option value="full">Full Wrap</option><option value="3/4">3/4 Wrap</option><option value="half">Half Wrap</option><option value="quarter">Quarter Wrap</option><option value="ll">Lettering &amp; Logo</option></select></div>
+<div class="f"><label>Material</label><select id="m2" onchange="calc()"><option value="Cast-3M-IJ180CV3">Cast-3M ($1.45)</option><option value="Cast-Brightline (Economy)">Brightline ($1.45)</option><option value="Reflective-3M">Refl-3M ($0.86)</option><option value="Reflective -Briteline (Economy)">Refl-Brit ($0.83)</option><option value="Perf-Briteline 70/30">Perf-Brit ($5.56)</option><option value="Perf-3M 50/50">Perf-3M ($4.77)</option></select></div>
+<div class="f"><label>Laminate</label><select id="l2" onchange="calc()"><option value="None">None</option><option value="Cast-3M 8518-Gloss" selected>3M Gloss ($0.96)</option><option value="Cast-3M 8520 Matte">3M Matte ($1.15)</option><option value="Cast-Brightline-Gloss">BL Gloss ($1.15)</option><option value="Cast-Brightline-Matte">BL Matte ($0.66)</option><option value="Calendered-3M-8508">Cal 3M ($0.66)</option></select></div>
+<div class="f"><label>Install</label><div class="tg"><div class="t on" id="i2ih" onclick="setI(2,'ih')">In-House</div><div class="t" id="i2sub" onclick="setI(2,'sub')">Sub</div></div></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="stitle">Add-Ons</div>
+<div class="ar"><input type="checkbox" id="ck-roof" onchange="calc()"><label for="ck-roof">Roof Wrap (Vehicle 1)</label><span class="at" id="roof-tag">&#8212;</span></div>
+<div class="ar"><input type="checkbox" id="ck-perf" onchange="calc()"><label for="ck-perf">Rear Window Perf (Vehicle 1)</label><span class="at" id="perf-tag">&#8212;</span></div>
+<div class="ar"><input type="checkbox" id="ck-mir" onchange="calc()"><label for="ck-mir">Mirrors &#8212; per set</label><span class="at">flat $150</span></div>
+<div class="ar"><input type="checkbox" id="ck-hdl" onchange="calc()"><label for="ck-hdl">Door Handles &#8212; per set</label><span class="at">flat $150</span></div>
+<div class="ar"><input type="checkbox" id="ck-bmp" onchange="calc()"><label for="ck-bmp">Bumpers (front + rear)</label><span class="at">flat $600</span></div>
+<div class="ar">
+  <input type="checkbox" id="ck-dec" onchange="calc()">
+  <label for="ck-dec">Door Decals / Logo Decals</label>
+  <span style="display:flex;align-items:center;gap:5px;margin-left:auto">
+    <span style="font-size:11px;color:#bbb">qty</span>
+    <input type="text" id="dec-qty" value="2" style="width:42px;padding:4px 6px;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px" onchange="calc()" onclick="document.getElementById('ck-dec').checked=true;calc()">
+    <span style="font-size:11px;color:#bbb">&#215; $100 ea</span>
+  </span>
+</div>
+<div class="ar"><input type="checkbox" id="ck-ship" onchange="calc()"><label for="ck-ship">Out-of-State Shipping (Subcontract)</label><span class="at">+$75</span></div>
+<div class="ar">
+  <input type="checkbox" id="ck-prep" onchange="calc()">
+  <label for="ck-prep">Vehicle Prep</label>
+  <span style="display:flex;align-items:center;gap:5px;margin-left:auto">
+    <span style="font-size:11px;color:#bbb">hrs</span>
+    <input type="text" id="prep-hrs" value="1" style="width:42px;padding:4px 6px;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px" onchange="calc()" onclick="document.getElementById('ck-prep').checked=true;calc()">
+    <span style="font-size:11px;color:#bbb" id="prep-rate-label">@ $100/hr</span>
+  </span>
+</div>
+<div class="ar">
+  <input type="checkbox" id="ck-remov" onchange="calc()">
+  <label for="ck-remov">Wrap Removal Only</label>
+  <span style="display:flex;align-items:center;gap:5px;margin-left:auto">
+    <span style="font-size:11px;color:#bbb">hrs</span>
+    <input type="text" id="remov-hrs" value="1" style="width:42px;padding:4px 6px;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px" onchange="calc()" onclick="document.getElementById('ck-remov').checked=true;calc()">
+    <span style="font-size:11px;color:#bbb" id="remov-rate-label">@ $100/hr</span>
+  </span>
+</div>
+</div>
+
+<div class="section">
+<div class="stitle">Design Services</div>
+<div class="g2">
+<div class="f"><label>Wrap Design</label>
+<select id="dw" onchange="calc()">
+<option value="0">None</option>
+<option value="149">File Setup Only — $149 (client provides print-ready file)</option>
+<option value="149b">L&amp;L Layout — $149 (arrange provided logos/text into layout)</option>
+<option value="199">Quarter Wrap Design — $199</option>
+<option value="499">Half Wrap Design — $499</option>
+<option value="499">Full Wrap Design — $499</option>
+</select></div>
+<div class="f"><label>Logo / Branding</label>
+<select id="dl" onchange="calc()">
+<option value="0">None</option>
+<option value="149">Logo Refresh — $149 (update colors/fonts on existing logo)</option>
+<option value="199">Basic Logo — $199 (simple text + icon, 1-2 revisions)</option>
+<option value="349">Custom Logo — $349 (unique design, multiple concepts, full revisions)</option>
+<option value="499">Basic Mascot — $499 (simple character, limited detail)</option>
+<option value="799">Semi-Custom Mascot — $799 (detailed character, moderate complexity)</option>
+<option value="1200">Custom Mascot — $1,200 (fully custom character, high detail, full revisions)</option>
+<option value="599">Basic Branding Package — $599 (logo + 1 color palette + basic guidelines)</option>
+<option value="999">Standard Branding Package — $999 (logo + colors + fonts + business card + letterhead)</option>
+<option value="1799">Full Branding Package — $1,799 (complete brand identity: logo, colors, fonts, all collateral + brand guide)</option>
+</select></div>
+</div>
+</div>
+
+<div class="section">
+<div class="stitle">Notes</div>
+<textarea id="job-notes" placeholder="Special requirements, colors, customer requests, deadlines, anything your installer or designer needs to know..." style="width:100%;min-height:80px;padding:8px 10px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;resize:vertical;color:#1a1a1a;background:#fff;outline:none"></textarea>
+</div>
+
+<div class="section">
+<div id="em" class="em">Select a vehicle and wrap type to see pricing</div>
+<div id="cn" style="display:none">
+<div class="rg">
+<div class="mt"><div class="ml">Price to Client</div><div class="mv" id="r-tot"></div></div>
+<div class="mt"><div class="ml">Your Cost</div><div class="mv" id="r-cst"></div></div>
+<div class="mt"><div class="ml">Gross Profit</div><div class="mv g" id="r-prf"></div></div>
+</div>
+<table class="li">
+<tr id="v1mr" style="display:none"><td id="v1ml">V1 Material</td><td id="v1mv"></td></tr>
+<tr id="v1ir" style="display:none"><td id="v1il">V1 Install</td><td id="v1iv"></td></tr>
+<tr id="v2mr" style="display:none"><td id="v2ml">V2 Material</td><td id="v2mv"></td></tr>
+<tr id="v2ir" style="display:none"><td id="v2il">V2 Install</td><td id="v2iv"></td></tr>
+<tbody id="addon-rows"></tbody>
+<tr id="shipr" style="display:none"><td>Shipping</td><td>$75.00</td></tr>
+<tr id="desr" style="display:none"><td>Design Services</td><td id="desv"></td></tr>
+<tr class="tot"><td>Total to Client</td><td id="totv"></td></tr>
+</table>
+<div style="margin-top:12px;padding:10px 12px;background:#f8f8f7;border-radius:8px;font-size:12px">
+<div style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:8px">Your Pay Obligations (30%)</div>
+<table style="width:100%;border-collapse:collapse;font-size:12px">
+<tr id="instpayr" style="display:none"><td style="padding:4px 0;color:#444">Installer Pay (30% of install)</td><td style="text-align:right;font-weight:600;color:#1a1a1a" id="instpayv"></td></tr>
+<tr id="despayr" style="display:none"><td style="padding:4px 0;color:#444">Designer Pay (30% of design)</td><td style="text-align:right;font-weight:600;color:#1a1a1a" id="despayv"></td></tr>
+</table>
+</div>
+<div id="sbx" style="display:none">
+<div class="sb">
+<div class="sl">Sub Install Scheduler</div>
+<div style="font-size:12px;color:#185FA5;margin-bottom:7px">Pay your sub installer between these amounts to maintain 40&#8211;50% gross profit on this job:</div>
+<div class="sr" id="srng"></div>
+<div class="sn">Min amount keeps 50% GP &nbsp;&#183;&nbsp; Max amount keeps 40% GP</div>
+</div>
+</div>
+<div class="qn" id="qnt"></div>
+<button class="bc" id="cbtn" onclick="copyEst()">Copy Estimate to Clipboard</button>
+</div>
+</div>
+</div>
+
+<script>
+const VD={"MISC":[{"model":"12ft Box","sqft":231,"r":0,"w":0},{"model":"14ft Box","sqft":254,"r":0,"w":0},{"model":"16ft box","sqft":287,"r":0,"w":0},{"model":"18ft box","sqft":345,"r":0,"w":0},{"model":"20ft box","sqft":384,"r":0,"w":0},{"model":"22ft box","sqft":413,"r":0,"w":0},{"model":"24ft box","sqft":457,"r":0,"w":0},{"model":"26ft box","sqft":495,"r":0,"w":0},{"model":"8ft Trailer","sqft":174,"r":0,"w":0},{"model":"10ft Trailer","sqft":200,"r":0,"w":0},{"model":"12ft Trailer","sqft":224,"r":0,"w":0},{"model":"14ft Trailer","sqft":254,"r":0,"w":0},{"model":"16ft Trailer","sqft":306,"r":0,"w":0},{"model":"18ft Trailer","sqft":345,"r":0,"w":0},{"model":"20ft Trailer","sqft":373,"r":0,"w":0},{"model":"24ft Trailer","sqft":430,"r":0,"w":0},{"model":"46ft Trailer","sqft":792,"r":0,"w":0},{"model":"53ft Trailer","sqft":1000,"r":0,"w":0}],"Acura":[{"model":"ILX","sqft":215,"r":24,"w":12},{"model":"TLX","sqft":234,"r":26,"w":15},{"model":"RLX","sqft":232,"r":27,"w":16},{"model":"Integra","sqft":221,"r":23,"w":12},{"model":"MDX","sqft":248,"r":35,"w":12},{"model":"RDX","sqft":210,"r":34,"w":10}],"Alfa Romeo":[{"model":"Giulia","sqft":220,"r":26,"w":15},{"model":"4C","sqft":205,"r":20,"w":11},{"model":"Tonale","sqft":212,"r":27,"w":12},{"model":"Stelvio","sqft":245,"r":27,"w":12}],"Aston Martin":[{"model":"DBS","sqft":236,"r":5,"w":0},{"model":"DB09","sqft":239,"r":21,"w":14},{"model":"Vantage","sqft":212,"r":16,"w":14},{"model":"Vanquish","sqft":261,"r":18,"w":14}],"Audi":[{"model":"A3","sqft":204,"r":23,"w":14},{"model":"A4","sqft":213,"r":22,"w":13},{"model":"A6","sqft":232,"r":24,"w":15},{"model":"A8","sqft":252,"r":27,"w":16},{"model":"A5","sqft":219,"r":21,"w":17},{"model":"Q3","sqft":217,"r":28,"w":11},{"model":"Q4 e-tron","sqft":234,"r":30,"w":12},{"model":"Q5","sqft":243,"r":29,"w":10},{"model":"Q7","sqft":251,"r":41,"w":12},{"model":"Q8","sqft":271,"r":30,"w":12},{"model":"e-tron GT","sqft":229,"r":24,"w":12}],"BMW":[{"model":"X1","sqft":199,"r":40,"w":10},{"model":"X2","sqft":204,"r":29,"w":8},{"model":"X3","sqft":223,"r":32,"w":10},{"model":"X4","sqft":234,"r":30,"w":12},{"model":"X5","sqft":263,"r":36,"w":10},{"model":"X6","sqft":264,"r":27,"w":15},{"model":"X7","sqft":267,"r":39,"w":2},{"model":"XM","sqft":217,"r":39,"w":14},{"model":"i4","sqft":226,"r":22,"w":17},{"model":"iX","sqft":229,"r":9,"w":11},{"model":"2 Series","sqft":211,"r":22,"w":12},{"model":"3 Series","sqft":225,"r":29,"w":21},{"model":"4 Series","sqft":222,"r":23,"w":18},{"model":"5 Series","sqft":233,"r":23,"w":16},{"model":"7 Series","sqft":245,"r":21,"w":16}],"Bentley":[{"model":"Continental GT","sqft":237,"r":6,"w":0}],"Buick":[{"model":"Encore","sqft":186,"r":28,"w":12},{"model":"Encore GX","sqft":188,"r":27,"w":10},{"model":"Envision","sqft":242,"r":31,"w":10},{"model":"Enclave","sqft":227,"r":38,"w":10}],"Cadillac":[{"model":"CT4","sqft":221,"r":23,"w":14},{"model":"CT5","sqft":236,"r":26,"w":13},{"model":"Escalade","sqft":289,"r":42,"w":12},{"model":"XT4","sqft":212,"r":30,"w":6},{"model":"XT5","sqft":204,"r":34,"w":11},{"model":"XT6","sqft":254,"r":40,"w":11}],"Chevrolet":[{"model":"Brightdrop 400","sqft":390,"r":62,"w":0},{"model":"Brightdrop 600","sqft":467,"r":85,"w":0},{"model":"City Express","sqft":286,"r":49,"w":9},{"model":"Express","sqft":254,"r":65,"w":14},{"model":"Express Extended","sqft":270,"r":74,"w":14},{"model":"Silverado Reg Cab Std Bed","sqft":265,"r":19,"w":11},{"model":"Silverado Reg Cab Long Bed","sqft":299,"r":19,"w":11},{"model":"Silverado extended cab long bed","sqft":284,"r":30,"w":12},{"model":"Silverado Extended  Cab Std Bed","sqft":295,"r":30,"w":12},{"model":"Silverado Crew Cab Short Bed","sqft":267,"r":36,"w":12},{"model":"Silverado Crew Cab Std bed","sqft":295,"r":32,"w":12},{"model":"Silverado Crew Cab Long Bed","sqft":296,"r":32,"w":12},{"model":"Silverado Crew Cab Duelly Long bed","sqft":301,"r":33,"w":12},{"model":"Silverado EV","sqft":224,"r":37,"w":9},{"model":"Colorado extended long bed","sqft":242,"r":23,"w":9},{"model":"colorado crew cab short bed","sqft":239,"r":24,"w":9},{"model":"Colorado crew Cab long bed","sqft":253,"r":28,"w":9},{"model":"Traverse","sqft":222,"r":40,"w":10},{"model":"Trax","sqft":201,"r":28,"w":10},{"model":"Trailblazer","sqft":180,"r":31,"w":10},{"model":"Blazer","sqft":213,"r":33,"w":12},{"model":"Tahoe","sqft":272,"r":47,"w":12},{"model":"Equinox","sqft":195,"r":32,"w":11},{"model":"Suburban","sqft":282,"r":55,"w":12},{"model":"Cruze","sqft":207,"r":23,"w":12},{"model":"Malibu","sqft":219,"r":25,"w":14},{"model":"Express Cutaway Chassis","sqft":91,"r":0,"w":0},{"model":"Silverado 3500 Chassis","sqft":118,"r":0,"w":0},{"model":"Silverado 4500 Chassis","sqft":176,"r":0,"w":0},{"model":"Low Cab Forward Single Chassis","sqft":74,"r":0,"w":0},{"model":"Low Cab Forward Double Chassis","sqft":120,"r":0,"w":0}],"Chrysler":[{"model":"300.0","sqft":244,"r":31,"w":15},{"model":"Pacifica","sqft":279,"r":50,"w":13}],"Dodge-Ram":[{"model":"ProMaster 1500 High Roof 136","sqft":361,"r":57,"w":17},{"model":"ProMaster 3500 Extended High Roof 159","sqft":392,"r":71,"w":17},{"model":"ProMaster 2500 Cargo Low Roof 136","sqft":301,"r":75,"w":16},{"model":"Sprinter 2500 High Roof","sqft":460,"r":75,"w":19},{"model":"Sprinter 2500 Low Roof","sqft":351,"r":78,"w":19},{"model":"1500 Crew Cab Short Bed","sqft":275,"r":35,"w":12},{"model":"1500 Crew Cab Standard Bed","sqft":281,"r":34,"w":12},{"model":"1500 Quad Cab Standard Bed","sqft":237,"r":30,"w":12},{"model":"2500 Crew Cab Standard Bed","sqft":369,"r":30,"w":12},{"model":"2500 Crew Cab Long Bed","sqft":311,"r":34,"w":11},{"model":"2500 Mega Cab Standard Bed","sqft":292,"r":35,"w":12},{"model":"2500 Regular Cab Long Bed","sqft":300,"r":22,"w":11},{"model":"3500 Crew Cab Standard Bed","sqft":300,"r":12,"w":12},{"model":"3500  Crew Cab Long Bed Dually","sqft":329,"r":30,"w":12},{"model":"3500 Crew Cab Long Bed","sqft":319,"r":30,"w":12},{"model":"3500 Mega Cab Short Bed Dually","sqft":329,"r":39,"w":11},{"model":"3500 Mega Cab Standard Bed","sqft":298,"r":35,"w":12},{"model":"3500 Regular Cab Long Bed","sqft":286,"r":20,"w":12}],"Fiat":[{"model":"500X","sqft":179,"r":8,"w":11},{"model":"500e","sqft":198,"r":18,"w":9}],"Ford":[{"model":"Transit Connect Short","sqft":271,"r":42,"w":12},{"model":"Transit Connect Ext","sqft":301,"r":50,"w":12},{"model":"E-350","sqft":301,"r":75,"w":12},{"model":"E-150","sqft":283,"r":63,"w":12},{"model":"Transit low roof standard","sqft":276,"r":64,"w":0},{"model":"Transit mid roof standard","sqft":357,"r":57,"w":0},{"model":"Transit high roof standard","sqft":385,"r":52,"w":19},{"model":"Transit high roof extended","sqft":409,"r":67,"w":0},{"model":"F-150 Regular Cab Standard Bed","sqft":238,"r":19,"w":13},{"model":"F-150 Regular Cab Long Bed","sqft":249,"r":19,"w":13},{"model":"F-150 extended cab standard Bed","sqft":246,"r":31,"w":13},{"model":"F-150 extended cab long bed","sqft":257,"r":31,"w":13},{"model":"F-150 crew cab short bed","sqft":247,"r":34,"w":13},{"model":"F-150 crew cab standard bed","sqft":266,"r":34,"w":13},{"model":"Maverick crew cab standard bed","sqft":240,"r":28,"w":8},{"model":"Ranger extended cab standard bed","sqft":190,"r":22,"w":9},{"model":"Ranger Crew cab short bed","sqft":231,"r":26,"w":9},{"model":"F-250 Regular Cab Long Bed","sqft":261,"r":23,"w":13},{"model":"F-250 Extended cab Standard Bed","sqft":251,"r":31,"w":13},{"model":"F-250 Extended cab long bed","sqft":269,"r":31,"w":13},{"model":"F-250 crew Cab standard Bed","sqft":254,"r":35,"w":13},{"model":"F-250 Crew cab Long Bed","sqft":270,"r":35,"w":14},{"model":"F-350 reg cab long bed","sqft":259,"r":22,"w":14},{"model":"F-350 ext cab standard bed","sqft":254,"r":27,"w":14},{"model":"F-350 ext cab long bed","sqft":263,"r":27,"w":14},{"model":"F-350 crew cab standard bed","sqft":255,"r":30,"w":14},{"model":"F-350 crew cab long bed","sqft":267,"r":30,"w":14},{"model":"F-350 Reg cab long bed dually","sqft":249,"r":22,"w":14},{"model":"F-350 extended cab long bed dually (difficult)","sqft":274,"r":27,"w":14},{"model":"F-350 Crew cab long bed dually (difficult)","sqft":285,"r":30,"w":14},{"model":"Escape","sqft":199,"r":31,"w":11},{"model":"Explorer","sqft":237,"r":41,"w":11},{"model":"Expedition","sqft":264,"r":50,"w":12},{"model":"Bronco 2  DOOR","sqft":204,"r":5,"w":9},{"model":"Bronco Sport","sqft":168,"r":35,"w":9},{"model":"Mustang Mach-E","sqft":224,"r":29,"w":12},{"model":"Mustang GT","sqft":229,"r":16,"w":15},{"model":"Mustang Convertible","sqft":230,"r":0,"w":0},{"model":"Focus","sqft":214,"r":25,"w":10},{"model":"Fusion","sqft":237,"r":26,"w":17},{"model":"Transit Cutaway Chassis","sqft":95,"r":0,"w":0},{"model":"E-Series Cutaway Chassis","sqft":114,"r":0,"w":0},{"model":"F-350 Chassis Cab 2 seater","sqft":126,"r":0,"w":0},{"model":"F-350 Chassis Ext Cab","sqft":175,"r":0,"w":0},{"model":"F-350 Chassis Crew Cab","sqft":181,"r":0,"w":0},{"model":"F-650-F750 Chassis cab 2 seater","sqft":180,"r":0,"w":0},{"model":"F-650-F750 Chassis cab 4 seater","sqft":220,"r":0,"w":0}],"GMC":[{"model":"Savana - Cargo / Cutaway - 135\" / 155\" WB","sqft":269,"r":65,"w":14},{"model":"Canyon - Crew Cab","sqft":230,"r":28,"w":9},{"model":"Sierra 1500 - Crew Cab","sqft":276,"r":34,"w":11},{"model":"Sierra 2500HD - Crew","sqft":275,"r":35,"w":12},{"model":"Acadia","sqft":219,"r":41,"w":9},{"model":"Terrain","sqft":240,"r":32,"w":11},{"model":"Yukon","sqft":299,"r":53,"w":11}],"Genesis":[{"model":"GV70","sqft":232,"r":30,"w":12},{"model":"GV80","sqft":272,"r":32,"w":11},{"model":"G70","sqft":221,"r":22,"w":14},{"model":"G80","sqft":249,"r":26,"w":16}],"Honda":[{"model":"Odyssey","sqft":243,"r":50,"w":13},{"model":"Ridgeline - Crew Cab","sqft":193,"r":33,"w":10},{"model":"CR-V","sqft":203,"r":33,"w":11},{"model":"HR-V","sqft":195,"r":29,"w":12},{"model":"Pilot","sqft":233,"r":40,"w":12},{"model":"Accord","sqft":223,"r":25,"w":17},{"model":"Civic","sqft":221,"r":24,"w":12}],"Infiniti":[{"model":"Q50","sqft":229,"r":24,"w":14},{"model":"Q60","sqft":270,"r":20,"w":17},{"model":"QX50","sqft":213,"r":33,"w":12},{"model":"QX55","sqft":202,"r":27,"w":12},{"model":"QX60","sqft":267,"r":44,"w":12},{"model":"QX80","sqft":328,"r":46,"w":12}],"Jaguar":[{"model":"E-PACE","sqft":199,"r":30,"w":10},{"model":"F-PACE","sqft":235,"r":37,"w":11},{"model":"F-TYPE","sqft":205,"r":4,"w":0}],"Jeep":[{"model":"Gladiator","sqft":242,"r":10,"w":11},{"model":"Compass","sqft":192,"r":32,"w":9},{"model":"Grand Cherokee","sqft":265,"r":39,"w":12},{"model":"Renegade","sqft":177,"r":32,"w":12},{"model":"Wrangler -2 door","sqft":169,"r":7,"w":11},{"model":"Wrangler-4 door","sqft":262,"r":10,"w":10}],"LandRover":[{"model":"Discovery","sqft":216,"r":42,"w":13},{"model":"Range Rover Evoque","sqft":218,"r":32,"w":9},{"model":"Range Rover Velar","sqft":245,"r":29,"w":10},{"model":"Range Rover Sport","sqft":217,"r":40,"w":12}],"Lexus":[{"model":"IS","sqft":216,"r":22,"w":15},{"model":"UX","sqft":199,"r":24,"w":10},{"model":"NX","sqft":224,"r":28,"w":10},{"model":"RX","sqft":238,"r":28,"w":11},{"model":"GX","sqft":227,"r":37,"w":10},{"model":"LX","sqft":252,"r":40,"w":11},{"model":"RZ","sqft":234,"r":31,"w":13}],"Lincoln":[{"model":"Corsair","sqft":234,"r":32,"w":10},{"model":"Nautilus","sqft":206,"r":9,"w":11},{"model":"Aviator","sqft":244,"r":38,"w":11},{"model":"Navigator","sqft":280,"r":50,"w":11}],"Lucid":[{"model":"Air","sqft":175,"r":38,"w":18}],"Maserati":[{"model":"Ghibli","sqft":334,"r":24,"w":16},{"model":"Levante","sqft":260,"r":27,"w":12}],"Mazda":[{"model":"Mazda3","sqft":213,"r":23,"w":13},{"model":"Mazda6","sqft":224,"r":24,"w":14},{"model":"CX-30","sqft":163,"r":25,"w":11},{"model":"CX-5","sqft":231,"r":28,"w":7},{"model":"CX-50","sqft":176,"r":28,"w":12}],"Mercedes":[{"model":"Sprinter 2500 Cargo Hight roof ext","sqft":501,"r":79,"w":18},{"model":"Sprinter 2500 Cargo Low roof","sqft":349,"r":68,"w":33},{"model":"Metris Cargo","sqft":357,"r":61,"w":12},{"model":"GLC 300","sqft":211,"r":31,"w":9},{"model":"EQS 580","sqft":211,"r":31,"w":9},{"model":"EQE","sqft":232,"r":30,"w":10},{"model":"G-Class","sqft":325,"r":7,"w":9},{"model":"GLA - Class","sqft":198,"r":28,"w":10},{"model":"GLB - Class","sqft":199,"r":33,"w":10},{"model":"GLE - Class","sqft":254,"r":37,"w":12},{"model":"GLS - Class","sqft":260,"r":43,"w":11},{"model":"A-Class","sqft":217,"r":23,"w":12},{"model":"C-Class","sqft":223,"r":0,"w":0},{"model":"E-Class","sqft":238,"r":25,"w":11},{"model":"S-Class","sqft":253,"r":26,"w":13},{"model":"CLA - Class","sqft":235,"r":23,"w":15}],"Mini":[{"model":"Hardtop 2 Door","sqft":144,"r":29,"w":8},{"model":"Hardtop 4 Door","sqft":142,"r":30,"w":8},{"model":"Clubman","sqft":159,"r":36,"w":8},{"model":"Countryman","sqft":206,"r":32,"w":8},{"model":"Convertible","sqft":128,"r":0,"w":0}],"Mitsubishi":[{"model":"Mirage","sqft":183,"r":22,"w":9},{"model":"Eclipse","sqft":174,"r":19,"w":0},{"model":"Outlander","sqft":247,"r":30,"w":10},{"model":"Outlander Sport","sqft":208,"r":29,"w":10}],"Nissan":[{"model":"NV2500 S Cargo - High Roof","sqft":422,"r":55,"w":15},{"model":"NV1500 S Cargo - Low Roof","sqft":375,"r":69,"w":15},{"model":"Quest 3.5 SL Passenger","sqft":307,"r":52,"w":15},{"model":"Frontier - Crew Cab Short Bed","sqft":227,"r":27,"w":11},{"model":"Frontier - Ext Cab Sandard  Bed","sqft":231,"r":22,"w":10},{"model":"Titan - Reg Cab long Bed","sqft":256,"r":22,"w":11},{"model":"Titan - Crew Cab Standard Bed","sqft":305,"r":37,"w":12},{"model":"Titan - Crew Cab Short Bed","sqft":257,"r":34,"w":11},{"model":"Titan - Exte Cab Reg Bed","sqft":252,"r":28,"w":11},{"model":"Armada","sqft":296,"r":48,"w":12},{"model":"Murano","sqft":242,"r":32,"w":11},{"model":"Pathfinder","sqft":216,"r":39,"w":11},{"model":"Rogue","sqft":198,"r":30,"w":10},{"model":"Altima","sqft":227,"r":24,"w":15},{"model":"Sentra","sqft":211,"r":25,"w":14},{"model":"Versa","sqft":214,"r":22,"w":13}],"Polestar":[{"model":"2","sqft":197,"r":24,"w":15}],"Porsche":[{"model":"718 Cayman","sqft":218,"r":15,"w":14},{"model":"Boxster","sqft":193,"r":18,"w":0},{"model":"911.0","sqft":235,"r":15,"w":12},{"model":"Taycan","sqft":209,"r":12,"w":9},{"model":"Macan","sqft":222,"r":32,"w":12},{"model":"Cayenne","sqft":227,"r":7,"w":12},{"model":"Panamera","sqft":248,"r":26,"w":13}],"Rivian":[{"model":"R1T","sqft":199,"r":8,"w":10},{"model":"R1S","sqft":213,"r":48,"w":10}],"Rolls-Royce":[{"model":"Ghost","sqft":325,"r":30,"w":13},{"model":"Phantom","sqft":330,"r":31,"w":11}],"Subaru":[{"model":"Impreza","sqft":217,"r":31,"w":10},{"model":"Crosstrek","sqft":192,"r":26,"w":10},{"model":"Legacy","sqft":231,"r":25,"w":17},{"model":"WRX","sqft":253,"r":24,"w":16},{"model":"BRZ","sqft":182,"r":16,"w":15},{"model":"Forester","sqft":224,"r":32,"w":11},{"model":"Outback","sqft":191,"r":29,"w":10},{"model":"Ascent","sqft":228,"r":43,"w":12}],"Tesla":[{"model":"Model 3","sqft":230,"r":0,"w":0},{"model":"Model S","sqft":250,"r":0,"w":0},{"model":"Model X","sqft":267,"r":0,"w":0},{"model":"Model Y","sqft":239,"r":0,"w":0},{"model":"Cybertruck","sqft":242,"r":0,"w":0}],"Toyota":[{"model":"Sienna","sqft":261,"r":43,"w":17},{"model":"Sienna Minivan","sqft":264,"r":45,"w":14},{"model":"Tacoma - Crew Cab","sqft":246,"r":28,"w":9},{"model":"Tacoma - Ext Cab","sqft":286,"r":19,"w":9},{"model":"Tacoma - Reg Cab","sqft":246,"r":18,"w":10},{"model":"Tundra - Crew Cab","sqft":287,"r":33,"w":12},{"model":"Tundra - Ext Cab","sqft":280,"r":32,"w":12},{"model":"Tundra - Reg Cab","sqft":253,"r":26,"w":12},{"model":"4Runner","sqft":256,"r":36,"w":7},{"model":"Highlander","sqft":251,"r":34,"w":11},{"model":"RAV4","sqft":193,"r":29,"w":12},{"model":"Sequoia","sqft":280,"r":46,"w":11},{"model":"Camry","sqft":220,"r":24,"w":15},{"model":"Corolla","sqft":210,"r":23,"w":14},{"model":"Prius","sqft":184,"r":17,"w":17}],"Volkswagon":[{"model":"Jetta","sqft":218,"r":23,"w":14},{"model":"GTI","sqft":204,"r":29,"w":10},{"model":"Taos","sqft":199,"r":33,"w":10},{"model":"Tiguan","sqft":206,"r":35,"w":11},{"model":"Atlas","sqft":220,"r":42,"w":12},{"model":"Atlas Cross Sport","sqft":248,"r":38,"w":13},{"model":"ID.4","sqft":160,"r":0,"w":9}],"Hyundai":[{"model":"Accent","sqft":198,"r":21,"w":14},{"model":"Elantra","sqft":223,"r":23,"w":16},{"model":"Elantra N","sqft":208,"r":23,"w":17},{"model":"Ioniq 5","sqft":227,"r":0,"w":14},{"model":"Ioniq 6","sqft":216,"r":26,"w":8},{"model":"Kona","sqft":167,"r":27,"w":10},{"model":"Palisade","sqft":208,"r":37,"w":12},{"model":"Santa Cruz","sqft":183,"r":24,"w":8},{"model":"Santa Fe","sqft":207,"r":38,"w":10},{"model":"Sonata","sqft":219,"r":24,"w":16},{"model":"Tucson","sqft":231,"r":30,"w":10},{"model":"Veloster","sqft":186,"r":22,"w":8},{"model":"Venue","sqft":200,"r":20,"w":11}]};
+
+const MC={"Cast-3M-IJ180CV3":1.45,"Cast-Brightline (Economy)":1.45,"Reflective-3M":0.86,"Reflective -Briteline (Economy)":0.83,"Perf-Briteline 70/30":5.56,"Perf-3M 50/50":4.77};
+const LC={"None":0,"Cast-3M 8518-Gloss":0.96,"Cast-3M 8520 Matte":1.15,"Cast-Brightline-Gloss":1.15,"Cast-Brightline-Matte":0.66,"Calendered-3M-8508":0.66};
+const MU=2.22,IC=0.25,IS=1.0,PL=0.75,IHR={simple:6,avg:7,complex:9},SP=2,PP=0.30;
+
+const AV=[];
+for(const[mk,ms] of Object.entries(VD)) for(const v of ms) AV.push({mk,m:v.model,s:v.sqft,r:v.r||0,w:v.w||0});
+let V=[null,null],IT=['ih','ih'];
+
+const gi=id=>document.getElementById(id);
+const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+
+function setI(n,t){IT[n-1]=t;gi(`i${n}ih`).classList.toggle('on',t==='ih');gi(`i${n}sub`).classList.toggle('on',t==='sub');calc();}
+
+function clrV(n){
+  V[n-1]=null;gi(`vs${n}`).value='';gi(`vb${n}`).style.display='none';
+  if(n===1){gi('ck-roof').checked=false;gi('ck-roof').disabled=true;gi('roof-tag').textContent='—';gi('ck-perf').checked=false;gi('ck-perf').disabled=true;gi('perf-tag').textContent='—';}
+  calc();
+}
+
+function setupS(n){
+  const inp=gi(`vs${n}`),rl=gi(`rl${n}`);
+  inp.addEventListener('input',()=>{
+    const q=inp.value.trim().toLowerCase();
+    if(!q){rl.style.display='none';return;}
+    const hits=AV.filter(v=>v.mk.toLowerCase().includes(q)||v.m.toLowerCase().includes(q)).slice(0,16);
+    if(!hits.length){rl.style.display='none';return;}
+    rl.innerHTML=hits.map(v=>`<div class="ri" onclick="pick(${n},'${v.mk.replace(/'/g,"\\'")}','${v.m.replace(/'/g,"\\'")}',${v.s},${v.r},${v.w})"><div>${v.mk} ${v.m}</div><div class="mk">${v.s} sf no-roof${v.r>0?' · roof '+v.r+' sf':''}${v.w>0?' · window '+v.w+' sf':''}</div></div>`).join('');
+    rl.style.display='block';
+  });
+  document.addEventListener('click',e=>{if(!inp.contains(e.target)&&!rl.contains(e.target))rl.style.display='none';});
+}
+setupS(1);setupS(2);
+
+function pick(n,mk,m,s,r,w){
+  V[n-1]={mk,m,s,r,w:w||0};
+  gi(`vs${n}`).value=`${mk} ${m}`;gi(`rl${n}`).style.display='none';
+  gi(`vb${n}`).style.display='flex';gi(`vn${n}`).textContent=`${mk} ${m}`;gi(`vf${n}`).textContent=`${s} sf (no roof)`;
+  if(n===1){
+    const hr=r>0;gi('ck-roof').disabled=!hr;gi('roof-tag').textContent=hr?`${r} sf`:'no roof data';if(!hr)gi('ck-roof').checked=false;
+    const hw=v.w>0;gi('ck-perf').disabled=!hw;gi('perf-tag').textContent=hw?`${v.w} sf · $5.95/sf`:'no window data';if(!hw)gi('ck-perf').checked=false;
+  }
+  calc();
+}
+
+function getSF(v,wt){if(!v||!wt)return 0;let sf=v.s;if(wt==='3/4')sf=Math.round(sf*.75);else if(wt==='half')sf=Math.round(sf*.5);else if(wt==='quarter')sf=Math.round(sf*.25);else if(wt==='ll')sf=Math.round(sf*.25);return sf;}
+
+function calcV(v,wt,mat,lam,it){
+  const sf=getSF(v,wt);if(!sf)return null;
+  const mc=MC[mat]||0,lc=LC[lam]||0;
+  const matSell=Math.round(((mc+lc+PL)*sf*MU+IS*sf)*100)/100;
+  const matCost=Math.round((IC+mc+lc+PL)*sf*100)/100;
+  const diff=sf>=300?'simple':sf>=200?'avg':'complex';
+  const ir=it==='ih'?IHR[diff]:IHR[diff]+SP;
+  const iSell=Math.round(ir*sf*100)/100;
+  const iCost=Math.round(iSell*PP*100)/100;
+  return{sf,matSell,matCost,iSell,iCost,diff,ir,wt,it,mat,lam,v};
+}
+
+function calc(){
+  const r1=calcV(V[0],gi('wt1').value,gi('m1').value,gi('l1').value,IT[0]);
+  const r2=calcV(V[1],gi('wt2').value,gi('m2').value,gi('l2').value,IT[1]);
+  if(!r1&&!r2){gi('em').style.display='block';gi('cn').style.display='none';return;}
+
+  let tot=0,cst=0,adMatS=0,adInstS=0,adMatC=0,adInstC=0;
+  const notes=[];
+  const wl={'full':'Full','3/4':'3/4','half':'Half','quarter':'Qtr','ll':'L&L'};
+  const dl={'simple':'Simple ≥300sf','avg':'Average 200-299sf','complex':'Complex 0-199sf'};
+
+  if(r1){
+    tot+=r1.matSell+r1.iSell;cst+=r1.matCost+r1.iCost;
+    gi('v1mr').style.display='';gi('v1ir').style.display='';
+    gi('v1ml').textContent=`V1: ${r1.v.mk} ${r1.v.m} — ${wl[r1.wt]} Material`;
+    gi('v1il').textContent=`V1: Install (${r1.it==='ih'?'In-House':'Sub'} @ $${r1.ir}/sf)`;
+    gi('v1mv').textContent=fmt(r1.matSell);gi('v1iv').textContent=fmt(r1.iSell);
+    notes.push(`V1: ${r1.sf} sf · ${dl[r1.diff]} · $${r1.ir}/sf`);
+  } else {gi('v1mr').style.display='none';gi('v1ir').style.display='none';}
+
+  if(r2){
+    tot+=r2.matSell+r2.iSell;cst+=r2.matCost+r2.iCost;
+    gi('v2mr').style.display='';gi('v2ir').style.display='';
+    gi('v2ml').textContent=`V2: ${r2.v.mk} ${r2.v.m} — ${wl[r2.wt]} Material`;
+    gi('v2il').textContent=`V2: Install (${r2.it==='ih'?'In-House':'Sub'} @ $${r2.ir}/sf)`;
+    gi('v2mv').textContent=fmt(r2.matSell);gi('v2iv').textContent=fmt(r2.iSell);
+    notes.push(`V2: ${r2.sf} sf · ${dl[r2.diff]} · $${r2.ir}/sf`);
+  } else {gi('v2mr').style.display='none';gi('v2ir').style.display='none';}
+
+  const v1=V[0],mc1=MC[gi('m1').value]||0,lc1=LC[gi('l1').value]||0;
+  const adItems=[];
+  if(gi('ck-roof').checked&&v1&&v1.r>0){
+    const rs=v1.r;
+    const rms=Math.round(((mc1+lc1+PL)*rs*MU+IS*rs)*100)/100;
+    const rir=IT[0]==='sub'?IHR['avg']+SP:IHR['avg'];
+    const ris=Math.round(rir*rs*100)/100;
+    adMatS+=rms; adInstS+=ris;
+    adMatC+=Math.round((IC+mc1+lc1+PL)*rs*100)/100;
+    adInstC+=Math.round(ris*PP*100)/100;
+    adItems.push({name:'Roof Wrap',mat:rms,inst:ris});
+  }
+  if(gi('ck-perf').checked&&v1&&v1.w>0){
+    const ws=v1.w;
+    const perfMatSell=Math.round(5.95*ws*100)/100;
+    const perfMatCost=Math.round(2.50*ws*100)/100;
+    const perfInstRate=IT[0]==='sub'?9+2:9;
+    const perfInstSell=Math.round(perfInstRate*ws*100)/100;
+    const perfInstCost=Math.round(perfInstSell*PP*100)/100;
+    adMatS+=perfMatSell; adInstS+=perfInstSell;
+    adMatC+=perfMatCost; adInstC+=perfInstCost;
+    adItems.push({name:'Rear Window Perf',mat:perfMatSell,inst:perfInstSell});
+  }
+  if(gi('ck-mir').checked){adInstS+=150;adInstC+=Math.round(150*PP*100)/100;adItems.push({name:'Mirrors',mat:0,inst:150});}
+  if(gi('ck-hdl').checked){adInstS+=150;adInstC+=Math.round(150*PP*100)/100;adItems.push({name:'Door Handles',mat:0,inst:150});}
+  if(gi('ck-bmp').checked){adInstS+=600;adInstC+=Math.round(600*PP*100)/100;adItems.push({name:'Bumpers',mat:0,inst:600});}
+  if(gi('ck-dec').checked){
+    const q=Math.max(1,parseInt(gi('dec-qty').value)||1);
+    const decSell=q*100;
+    adMatS+=decSell;adMatC+=Math.round(decSell*PP*100)/100;
+    adItems.push({name:`Door/Logo Decals (x${q})`,mat:decSell,inst:0});
+  }
+  if(gi('ck-prep').checked){
+    const hrs=Math.max(0.5,parseFloat(gi('prep-hrs').value)||1);
+    const prepRate=IT[0]==='sub'?125:100;
+    gi('prep-rate-label').textContent=`@ $${prepRate}/hr`;
+    const prepSell=Math.round(prepRate*hrs*100)/100;
+    const prepCost=Math.round(prepSell*PP*100)/100;
+    adInstS+=prepSell; adInstC+=prepCost;
+    adItems.push({name:`Vehicle Prep (${hrs} hr${hrs!==1?'s':''})`,mat:0,inst:prepSell});
+  } else {
+    gi('prep-rate-label').textContent=IT[0]==='sub'?'@ $125/hr':'@ $100/hr';
+  }
+  if(gi('ck-remov').checked){
+    const hrs=Math.max(0.5,parseFloat(gi('remov-hrs').value)||1);
+    const removRate=IT[0]==='sub'?125:100;
+    gi('remov-rate-label').textContent=`@ $${removRate}/hr`;
+    const removSell=Math.round(removRate*hrs*100)/100;
+    const removCost=Math.round(removSell*PP*100)/100;
+    adInstS+=removSell; adInstC+=removCost;
+    adItems.push({name:`Wrap Removal Only (${hrs} hr${hrs!==1?'s':''})`,mat:0,inst:removSell});
+  } else {
+    gi('remov-rate-label').textContent=IT[0]==='sub'?'@ $125/hr':'@ $100/hr';
+  }
+  const adS=adMatS+adInstS; const adC=adMatC+adInstC;
+
+  // Render individual add-on rows into tbody
+  const tbody=gi('addon-rows');
+  tbody.innerHTML='';
+  adItems.forEach(item=>{
+    if(item.mat>0){
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${item.name} <span style="font-size:10px;color:#888">(taxable)</span></td><td style="text-align:right;font-weight:600">${fmt(item.mat)}</td>`;
+      tbody.appendChild(tr);
+    }
+    if(item.inst>0){
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${item.name} — Install <span style="font-size:10px;color:#888">(non-taxable)</span></td><td style="text-align:right;font-weight:600">${fmt(item.inst)}</td>`;
+      tbody.appendChild(tr);
+    }
+  });
+  tot+=adS;cst+=adC;
+
+  const ship=gi('ck-ship').checked?75:0;
+  gi('shipr').style.display=ship?'':'none';tot+=ship;
+
+  const dwv=gi('dw').value,dlv=gi('dl').value;
+  const dv=(dwv==='149b'?149:+dwv||0)+(+dlv||0);
+  gi('desr').style.display=dv>0?'':'none';
+  if(dv>0)gi('desv').textContent=fmt(dv);
+  tot+=dv;
+
+  const prf=Math.round((tot-cst)*100)/100;
+  const mg=tot>0?prf/tot:0;
+
+  // Installer pay = 30% of all install sell (V1 + V2 + add-on install)
+  const totalInstSell=((r1?r1.iSell:0)+(r2?r2.iSell:0)+adInstS);
+  const instPay=Math.round(totalInstSell*PP*100)/100;
+  gi('instpayr').style.display=totalInstSell>0?'':'none';
+  if(totalInstSell>0)gi('instpayv').textContent=fmt(instPay);
+
+  // Designer pay = 30% of design services
+  const desPay=Math.round(dv*PP*100)/100;
+  gi('despayr').style.display=dv>0?'':'none';
+  if(dv>0)gi('despayv').textContent=fmt(desPay);
+
+  gi('r-tot').textContent=fmt(tot);
+  gi('r-cst').textContent=fmt(cst);
+  gi('r-prf').textContent=fmt(prf)+' ('+Math.round(mg*100)+'%)';
+  gi('r-prf').className='mv '+(mg>=0.4?'g':'r');
+  gi('totv').textContent=fmt(tot);
+  gi('qnt').textContent=notes.join('   ·   ');
+
+  const anySub=(r1&&r1.it==='sub')||(r2&&r2.it==='sub');
+  if(anySub){
+    gi('sbx').style.display='block';
+    const mn=Math.max(0,Math.round((tot*0.50-cst)*100)/100);
+    const mx=Math.max(0,Math.round((tot*0.60-cst)*100)/100);
+    gi('srng').textContent=fmt(mn)+' — '+fmt(mx);
+  } else gi('sbx').style.display='none';
+
+  gi('em').style.display='none';gi('cn').style.display='block';
+  const jobNotes=gi('job-notes').value.trim();
+  window._L={r1,r2,tot,cst,prf,mg,adMatS,adInstS,adItems,ship,dv,instPay,desPay,jobNotes,notes,IT:[...IT]};
+}
+
+['dw','dl'].forEach(id=>gi(id).addEventListener('change',calc));
+
+function copyEst(){
+  const d=window._L;if(!d){alert('Price a job first.');return;}
+  const co=gi('co').value||'—',ct=gi('ct').value||'—';
+  const wl={'full':'Full Wrap','3/4':'3/4 Wrap','half':'Half Wrap','quarter':'Quarter Wrap','ll':'Lettering & Logo'};
+  const dfl={'simple':'Simple (≥300 sf)','avg':'Average (200-299 sf)','complex':'Complex (0-199 sf)'};
+  const lines=['WRAP PRICING ESTIMATE','='.repeat(46),`Company:  ${co}`,`Contact:  ${ct}`,`Date:     ${new Date().toLocaleDateString()}`,''];
+  if(d.r1){lines.push(`Vehicle 1: ${d.r1.v.mk} ${d.r1.v.m}`);lines.push(`  ${wl[d.r1.wt]}  ·  ${d.r1.sf} sf  ·  ${dfl[d.r1.diff]}`);lines.push(`  Install: ${d.r1.it==='ih'?'In-House':'Subcontract'} @ $${d.r1.ir}/sf`);lines.push('');}
+  if(d.r2){lines.push(`Vehicle 2: ${d.r2.v.mk} ${d.r2.v.m}`);lines.push(`  ${wl[d.r2.wt]}  ·  ${d.r2.sf} sf  ·  ${dfl[d.r2.diff]}`);lines.push(`  Install: ${d.r2.it==='ih'?'In-House':'Subcontract'} @ $${d.r2.ir}/sf`);lines.push('');}
+  lines.push('--- PRICING BREAKDOWN ---');
+  lines.push('  [TAXABLE — MATERIAL]');
+  if(d.r1)lines.push(`  V1 Wrap Material (${d.r1.v.mk} ${d.r1.v.m}):  ${fmt(d.r1.matSell)}`);
+  if(d.r2)lines.push(`  V2 Wrap Material (${d.r2.v.mk} ${d.r2.v.m}):  ${fmt(d.r2.matSell)}`);
+  if(d.adItems&&d.adItems.length){
+    d.adItems.filter(i=>i.mat>0).forEach(i=>{
+      lines.push(`  ${i.name} — Material:  ${fmt(i.mat)}`);
+    });
+  }
+  lines.push('  [NON-TAXABLE — LABOR/INSTALL]');
+  if(d.r1)lines.push(`  V1 Wrap Install (${d.r1.it==='ih'?'In-House':'Sub'} @ $${d.r1.ir}/sf):  ${fmt(d.r1.iSell)}`);
+  if(d.r2)lines.push(`  V2 Wrap Install (${d.r2.it==='ih'?'In-House':'Sub'} @ $${d.r2.ir}/sf):  ${fmt(d.r2.iSell)}`);
+  if(d.adItems&&d.adItems.length){
+    d.adItems.filter(i=>i.inst>0).forEach(i=>{
+      lines.push(`  ${i.name} — Install:  ${fmt(i.inst)}`);
+    });
+  }
+  if(d.ship)lines.push(`  Shipping:  $75.00`);
+  if(d.dv>0)lines.push(`  Design Services:  ${fmt(d.dv)}`);
+  lines.push('─'.repeat(34));
+  lines.push(`TOTAL TO CLIENT:      ${fmt(d.tot)}`);
+  lines.push('');
+  lines.push('--- YOUR PAY OBLIGATIONS ---');
+  if(d.instPay>0)lines.push(`Installer Pay (30%):  ${fmt(d.instPay)}`);
+  if(d.desPay>0)lines.push(`Designer Pay (30%):   ${fmt(d.desPay)}`);
+  lines.push('');
+  lines.push(`Your Total Cost:  ${fmt(d.cst)}`);
+  lines.push(`Gross Profit:     ${fmt(d.prf)} (${Math.round(d.mg*100)}%)`);
+  const anySub=(d.r1&&d.r1.it==='sub')||(d.r2&&d.r2.it==='sub');
+  if(anySub){
+    const mn=Math.max(0,Math.round((d.tot*0.50-d.cst)*100)/100);
+    const mx=Math.max(0,Math.round((d.tot*0.60-d.cst)*100)/100);
+    lines.push('');
+    lines.push('SUB INSTALL SCHEDULER:');
+    lines.push(`Pay sub between: ${fmt(mn)} and ${fmt(mx)}`);
+    lines.push('(Min = keeps 50% GP   |   Max = keeps 40% GP)');
+  }
+  lines.push('');lines.push('='.repeat(46));
+  if(d.jobNotes){lines.push('');lines.push('NOTES:');lines.push(d.jobNotes);}
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>{
+    const b=gi('cbtn');b.textContent='Copied!';b.classList.add('ok');
+    setTimeout(()=>{b.textContent='Copy Estimate to Clipboard';b.classList.remove('ok');},2500);
+  }).catch(()=>{const w=window.open('','_blank');if(w)w.document.write('<pre style="font:13px monospace;padding:20px">'+lines.join('\n')+'</pre>');});
+}
+</script>
+</body>
+</html>
